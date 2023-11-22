@@ -8,11 +8,21 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy",
+        builder => builder
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .SetIsOriginAllowed(origin => true) // Разрешить любой источник
+            .AllowCredentials());
+});
+
 var app = builder.Build();
 
 app.UseRouting();
 
-app.UseCors(CorsPolicy);
+app.UseCors("CorsPolicy");
 
 app.MapHub<ChatHub>("/chatHub");
 
